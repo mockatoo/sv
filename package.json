@@ -1,6 +1,6 @@
 {
 	"name": "@mockatoo/sv",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Svelte CLI add-on: GitHub sign-in with Better Auth that works in development without a GitHub OAuth app, using the free Mockatoo mock.",
 	"keywords": [
 		"sv-add",
