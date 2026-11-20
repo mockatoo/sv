@@ -1,18 +1,30 @@
 <p align="center">
-  <img src="mockatoo-logo.png" alt="Mockatoo" width="96" height="96">
+  <img src="mockatoo-logo.png" alt="Mockatoo" width="128" height="128">
 </p>
 
-<h1 align="center">@mockatoo/sv</h1>
+<h1 align="center">Mockatoo</h1>
 
 <p align="center">
-  <strong>GitHub sign-in that works the moment you run <code>pnpm dev</code>. No GitHub OAuth app.</strong><br>
-  A <a href="https://svelte.dev/docs/cli/overview">Svelte CLI</a> community add-on that sets up Better Auth with a GitHub demo, and signs in through <a href="https://mockatoo.globalunderdog.com">Mockatoo</a>'s free hosted GitHub mock in development.
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="readme-headline-dark.svg">
+    <img src="readme-headline-light.svg" alt="Test Google, Microsoft, GitHub, Apple, Discord, LinkedIn, X and Facebook sign-in in CI, without getting blocked. One free OAuth provider for agentic development, E2E tests, and CI. No app registration, no bot checks, no fragile workarounds." width="880">
+  </picture>
 </p>
 
 <p align="center">
   <a href="https://github.com/mockatoo/sv/actions/workflows/ci.yml"><img src="https://github.com/mockatoo/sv/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://www.npmjs.com/package/@mockatoo/sv"><img src="https://img.shields.io/npm/v/@mockatoo/sv" alt="npm"></a>
 </p>
+
+<p align="center">
+  <a href="https://mockatoo.globalunderdog.com">Website</a> ·
+  <a href="https://mockatoo.globalunderdog.com/docs">Documentation</a> ·
+  <a href="https://github.com/mockatoo/connectors">Connectors</a> ·
+  <a href="https://app.mockatoo.globalunderdog.com">Create a free test account</a>
+</p>
+
+# @mockatoo/sv
+
+**GitHub sign-in that works the moment you run `pnpm dev`, with no GitHub OAuth app.** A [Svelte CLI](https://svelte.dev/docs/cli/overview) community add-on that sets up [Better Auth](https://www.better-auth.com) with a GitHub demo, and signs in through Mockatoo's free hosted GitHub mock in development.
 
 ```sh
 npx sv add @mockatoo
@@ -115,6 +127,10 @@ pnpm cli:check     # the real CLI: `sv create` + `sv add file:.`, type check, bu
 ```
 
 `pnpm test` signs in to the hosted mock when `MOCKATOO_TEST_EMAIL` and `MOCKATOO_TEST_PASSWORD` are set. Without them, it checks the redirect to Mockatoo's login page and skips the full sign-in with a notice. To try it by hand: `pnpm demo-create`, then `pnpm demo-add`.
+
+## Releasing
+
+Bump `version` in `package.json`, then push a matching tag (`v0.1.1`). [`release.yml`](.github/workflows/release.yml) re-runs every check, including the full sign-in, and publishes to npm with [trusted publishing](https://docs.npmjs.com/trusted-publishers): no npm token, and the package gets a provenance attestation. A prerelease version (`0.2.0-beta.1`) publishes under the `next` tag.
 
 ## License
 
