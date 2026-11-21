@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # The real `sv add` path: a fresh app, then `sv add file:<this package>`.
 # Checks that Better Auth is pulled in with the GitHub demo by `dependsOn`, that the
-# config is gated on `dev`, that the app type-checks and builds, and that a project
-# which already has auth is refused with nothing changed.
+# config is gated on `dev` on SvelteKit 3 and 2, that the app type-checks and builds,
+# and that a project which already has auth is refused with nothing changed.
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 work="$(mktemp -d)"
@@ -30,6 +30,28 @@ echo "fresh app: Better Auth added with the GitHub demo, gated on dev"
 echo "fresh app: svelte-check passed"
 (cd "$work/app" && pnpm build >"$work/build.log" 2>&1) || { cat "$work/build.log"; exit 1; }
 echo "fresh app: production build passed"
+grep -q "from '\$app/env'" "$auth"
+grep -q 'redirect(302, result.url, { external: true })' "$work/app/src/routes/demo/better-auth/login/+page.server.ts"
+echo "fresh app: SvelteKit 3 path (\$app/env, external redirect)"
+
+# 1b. A SvelteKit 2 app. `sv` 1.x scaffolds SvelteKit 3; 0.17.1 is the last release
+#     whose template is SvelteKit 2. The add-on itself still runs on the current `sv`.
+pnpm dlx sv@0.17.1 create "$work/kit2" --template minimal --types ts --no-add-ons --no-install >/dev/null 2>&1
+grep -q '"@sveltejs/kit": "^2' "$work/kit2/package.json"
+"$sv" add "file:$root" 'drizzle=database:sqlite+sqlite:libsql' \
+	--cwd "$work/kit2" --no-git-check --no-download-check --install pnpm >"$work/add2.log" 2>&1 \
+	|| { cat "$work/add2.log"; exit 1; }
+auth2="$work/kit2/src/lib/server/auth.ts"
+login2="$work/kit2/src/routes/demo/better-auth/login/+page.server.ts"
+grep -q "from '\$app/environment'" "$auth2"
+grep -Eq 'socialProviders: dev' "$auth2"
+grep -Eq 'dev \? \[mockGitHub\(\)\] : \[\]' "$auth2"
+grep -q 'redirect(302, result.url)' "$login2"
+! grep -q 'external: true' "$login2"
+(cd "$work/kit2" && pnpm exec svelte-kit sync >/dev/null && pnpm check >"$work/check2.log" 2>&1) \
+	|| { cat "$work/check2.log"; exit 1; }
+(cd "$work/kit2" && pnpm build >"$work/build2.log" 2>&1) || { cat "$work/build2.log"; exit 1; }
+echo "SvelteKit 2 app: \$app/environment, gated on dev, svelte-check and build passed"
 
 # 2. An app that already has Better Auth: refused, nothing changed.
 "$sv" create "$work/existing" --template minimal --types ts --no-add-ons --no-install >/dev/null

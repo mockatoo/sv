@@ -41,7 +41,7 @@ npx sv add @mockatoo
 | --- | --- |
 | **No auth yet** (a new `sv create` app, or an existing app without auth) | Adds [Better Auth](https://www.better-auth.com) with its GitHub demo (and [Drizzle](https://orm.drizzle.team), if you have no database), then makes the GitHub demo sign in through Mockatoo in development. |
 | **Already has auth**: Better Auth, Auth.js, Lucia, Arctic, Supabase, Clerk, Kinde, WorkOS, or a `src/lib/server/auth.(ts\|js)` file | **Changes nothing.** It stops with a message pointing to the Mockatoo skill and the matching example (see [Already have auth?](#already-have-auth)). |
-| **Not SvelteKit** | Changes nothing. The add-on requires SvelteKit. |
+| **Not SvelteKit** | Changes nothing. The add-on requires SvelteKit 2 or 3; CI tests both. |
 
 On a project with no auth, `npx sv add @mockatoo`:
 
@@ -123,7 +123,7 @@ None. Run it without arguments: `npx sv add @mockatoo`. It installs as `@mockato
 pnpm install
 pnpm typecheck
 pnpm test          # refusal tests, plus a generated app on each SvelteKit variant
-pnpm cli:check     # the real CLI: `sv create` + `sv add file:.`, type check, build, refusal
+pnpm cli:check     # the real CLI on SvelteKit 3 and 2: `sv create` + `sv add file:.`, type check, build, refusal
 ```
 
 `pnpm test` signs in to the hosted mock when `MOCKATOO_TEST_EMAIL` and `MOCKATOO_TEST_PASSWORD` are set. Without them, it checks the redirect to Mockatoo's login page and skips the full sign-in with a notice. To try it by hand: `pnpm demo-create`, then `pnpm demo-add`.
