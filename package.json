@@ -47,7 +47,8 @@
 		"prepublishOnly": "npm run build",
 		"test": "vitest run",
 		"typecheck": "tsc -p jsconfig.json --noEmit",
-		"cli:check": "bash scripts/cli-check.sh"
+		"cli:check": "bash scripts/cli-check.sh",
+		"ci": "pnpm typecheck && pnpm build && pnpm test && pnpm cli:check"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.65.1",

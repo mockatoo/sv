@@ -24,11 +24,9 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
       - name: Note the skipped sign-in
         if: env.MOCKATOO_TEST_EMAIL == ''
         run: echo "::notice::MOCKATOO_TEST_EMAIL and MOCKATOO_TEST_PASSWORD are not set, so the full sign-in is skipped."
-      - run: pnpm test
-      - run: pnpm cli:check
+      # Typecheck, build, tests and the `sv add` check: the same steps local-ci runs.
+      - run: pnpm run ci
